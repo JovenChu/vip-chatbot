@@ -65,7 +65,7 @@ def train_nlu():
     training_data = load_data("nlu_data/train_data")
     trainer = Trainer(load("pipeline_config.yaml"))# load的返回值就是一个RasaNLUModelConfig对象，而且其初始化需要传入的不是文件名，而是读取的配置文件内容，一个字典
     trainer.train(training_data)
-    model_directory = trainer.persist("models/", project_name="nlu",fixed_nmodel_name="model_ner_reg_all")
+    model_directory = trainer.persist("models/", project_name="nlu",fixed_model_name="model_ner_reg_all")
     # model_directory = trainer.persist("models/", project_name="ivr", fixed_model_name="demo")
 
     return model_directory
@@ -73,7 +73,7 @@ def train_nlu():
 
 
 def train_dialogue(domain_file="core_data/domain.yml",
-                   model_path="models/dialogue/core",
+                   model_path="models/core/dialogue",
                    training_data_file="core_data/story.md",
                    max_history=3):
     from rasa_core.policies.fallback import FallbackPolicy
@@ -113,7 +113,7 @@ def train_dialogue(domain_file="core_data/domain.yml",
 
 
 def run(serve_forever=True):
-    agent = Agent.load("models/dialogue/core", interpreter=RasaNLUInterpreter("models/nlu/model_ner_reg"))
+    agent = Agent.load("models/core/dialogue", interpreter=RasaNLUInterpreter("models/nlu/model_ner_reg_all"))
 
     inputChannel = MyInputChannel()
     if serve_forever:
@@ -126,7 +126,7 @@ def run(serve_forever=True):
 
 class YueBot():
     def __init__(self):
-        self.agent = Agent.load("models/dialogue/core", interpreter=RasaNLUInterpreter("models/nlu/model_ner_reg"))
+        self.agent = Agent.load("models/core/dialogue", interpreter=RasaNLUInterpreter("models/nlu/model_ner_reg_all"))
         self.inputChannel = MyInputChannel()
         self.agent.handle_channel(self.inputChannel)
 

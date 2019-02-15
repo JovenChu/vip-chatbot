@@ -1,0 +1,35 @@
+{
+  "action_fingerprints": {
+    "action_listen": {
+      "slots": []
+    },
+    "Chaxunwork": {
+      "slots": []
+    },
+    "utter_goodbye": {
+      "slots": []
+    },
+    "utter_greet": {
+      "slots": []
+    },
+    "Bankafangshi": {
+      "slots": []
+    },
+    "Usefanwei": {
+      "slots": []
+    },
+    "Numaction": {
+      "slots": []
+    }
+  },
+  "rasa_core": "0.9.8",
+  "max_histories": [
+    3,
+    null
+  ],
+  "ensemble_name": "rasa_core.policies.ensemble.SimplePolicyEnsemble",
+  "policy_names": [
+    "rasa_core.policies.keras_policy.KerasPolicy",
+    "rasa_core.policies.fallback.FallbackPolicy"
+  ]
+}

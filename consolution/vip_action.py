@@ -6,23 +6,10 @@
 # Project: vip
 # About: 创建预测后的行动到寻找答案的策略文件
 
-
-#coding:utf-8
-"""
-@author: pu
-@time: 18-9-18 上午10:08
-"""
 import json
 from rasa_core.actions import Action
 from rasa_core.events import Restarted
-from search import query_keyword,query_text
 
-# #引入代码
-# import sys
-# from sys import path
-# print(sys.path[0])
-# # path.append((sys.path[0],'\\esearch')) #这里preprocess是split_by_date.py所在文件夹
-# from .esearch.query import query_keyword
 
 
 with open('answer/qa.json', 'r', encoding='utf-8') as fw:
@@ -200,6 +187,7 @@ class Usefanwei(Action):
         print("Usefanwei")
         dispatcher.utter_message(result["Usefanwei"])
         return [Restarted()]
+
 
 
 

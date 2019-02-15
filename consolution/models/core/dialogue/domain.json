@@ -1,0 +1,30 @@
+{
+  "states": [
+    "intent_greet",
+    "intent_confirm",
+    "intent_goodbye",
+    "intent_thanks",
+    "intent_handle",
+    "intent_banka_fangshi",
+    "intent_chaxun_work",
+    "intent_use_fanwei",
+    "intent_inform_chaxun",
+    "entity_banka_item",
+    "entity_chaxun_item",
+    "slot_banka_item_0",
+    "slot_chaxun_item_0",
+    "prev_action_listen",
+    "prev_action_restart",
+    "prev_utter_greet",
+    "prev_utter_goodbye",
+    "prev_utter_default",
+    "prev_utter_thanks",
+    "prev_utter_ask_more_help",
+    "prev_utter_ask_chaxun",
+    "prev_action_default_fallback",
+    "prev_Bankafangshi",
+    "prev_Chaxunwork",
+    "prev_Usefanwei",
+    "prev_Numaction"
+  ]
+}

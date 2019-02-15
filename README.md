@@ -140,3 +140,53 @@
       }
     ```
   > * qa_by_entity.json、qa_by_intent.json：当意图置信度低于阈值时，触发fallback问答，将准备好的问题回复给用户，由用户选择并给予答复，是弥补意图不全或分类不足的方法之一。优先考虑实体相关，其次是意图相关。（这两个文件需要在设计完意图和实体后做）
+
+## 3.模型训练
+* Rasa-nlu训练意图分类模型：
+
+  ```python
+    def train_nlu():
+        from rasa_nlu.training_data.loading import load_data # 新api,会将目录下的所有文件合并
+        from rasa_nlu.config import RasaNLUModelConfig #新 API
+        from rasa_nlu.model import Trainer
+        from rasa_nlu.config import load
+
+        training_data = load_data("nlu_data/train_data")
+        trainer = Trainer(load("pipeline_config.yaml")) # load的返回值就是一个RasaNLUModelConfig对象，而且其初始化需要传入的不是文件名，而是读取的配置文件内容，一个字典
+        trainer.train(training_data)
+        model_directory = trainer.persist("models/", project_name="nlu",fixed_nmodel_name="model_ner_reg_all") # 意图分类模型保存路径
+
+        return model_directory
+
+  ```
+* Rasa-core训练action预测分类模型：
+  ```python
+    def train_dialogue(domain_file="core_data/domain.yml",
+                 model_path="models/core/dialogue",
+                 training_data_file="core_data/story.md",
+                 max_history=3):
+        from rasa_core.policies.fallback import FallbackPolicy
+        # agent = Agent(domain_file,
+        #               policies=[MemoizationPolicy(max_history=2), MobilePolicy()])
+        agent = Agent(domain_file, policies=[
+            KerasPolicy(MaxHistoryTrackerFeaturizer(BinarySingleStateFeaturizer(),max_history=max_history)),
+            FallbackPolicy(fallback_action_name='action_default_fallback',
+                           core_threshold=0.3,
+                           nlu_threshold=0.3)])
+        #如果给的是data的地址，会自动调用load_data
+        agent.train(
+            training_data_file,
+            epochs=200,
+            batch_size=16,
+            augmentation_factor=50,
+            validation_split=0.2
+        )
+
+        agent.persist(model_path)
+        return agent
+
+    ```
+* Demo运行：
+    ```
+    $ python webchat.py
+    ```

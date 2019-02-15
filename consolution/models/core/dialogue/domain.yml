@@ -1,0 +1,147 @@
+action_factory: null
+action_names:
+- utter_greet
+- utter_goodbye
+- utter_default
+- utter_thanks
+- utter_ask_more_help
+- utter_ask_chaxun
+- action_default_fallback
+- Bankafangshi
+- Chaxunwork
+- Usefanwei
+- Numaction
+actions:
+- utter_greet
+- utter_goodbye
+- utter_default
+- utter_thanks
+- utter_ask_more_help
+- utter_ask_chaxun
+- vip_action.ActionDefaultFallback
+- vip_action.Bankafangshi
+- vip_action.Chaxunwork
+- vip_action.Usefanwei
+- vip_action.Numaction
+config:
+  store_entities_as_slots: true
+entities:
+- banka_item
+- chaxun_item
+intents:
+- greet
+- confirm
+- goodbye
+- thanks
+- handle
+- banka_fangshi
+- chaxun_work
+- use_fanwei
+- inform_chaxun
+slots:
+  banka_item:
+    initial_value: null
+    type: rasa_core.slots.TextSlot
+  chaxun_item:
+    initial_value: null
+    type: rasa_core.slots.TextSlot
+templates:
+  utter_ask_chaxun:
+  - text: 请问你是想查询什么呢？(订单/余额/明细)
+  utter_ask_more_help:
+  - text: 请问还有什么能帮您吗？
+  - text: 请问您还想查询什么信息呢？
+  utter_default:
+  - text: 没有明白您的意思呀，能重新描述一下吗？
+  - text: 哈哈，刚刚开了个小差，没有明白呢，可以再描述一下吗？
+  utter_goodbye:
+  - text: 再见，为您服务很开心^_^
+  - text: Bye，下次再见
+  - text: 再见
+  - text: bye
+  - text: byebye
+  - text: 下次再见
+  - text: '88'
+  - text: '8'
+  - text: '886'
+  - text: 明天见
+  - text: 下次见
+  - text: 请慢走
+  - text: 慢走
+  - text: 您慢走
+  - text: 您下次再来
+  - text: 下次再来
+  - text: goodbye
+  - text: 拜拜
+  - text: 掰掰
+  - text: 有幸再会
+  utter_greet:
+  - text: 您好!，我是小粤粤，很高兴为您服务，您想咨询什么信息呢？
+  - text: Hi!，我是小粤粤，有什么可以帮您吗？
+  - text: Hello
+  - text: 你好
+  - text: 您好
+  - text: 您好啊
+  - text: 你好啊
+  - text: 很开心遇见你啊
+  - text: 很开心遇见你
+  - text: 很开心遇见您啊
+  - text: 很开心遇见您
+  - text: 很高兴见到你
+  - text: 很高兴见到您
+  - text: hello
+  - text: hi
+  - text: Hi
+  - text: 您回来啦
+  - text: 你回来啦
+  - text: Nice to meet you
+  utter_thanks:
+  - text: 不用谢哦
+  - text: 我应该做的
+  - text: 您开心我就开心
+  - text: 您的肯定就是对我的奖励哦
+  - text: 谢谢您的回复
+  - text: 谢谢您的建议
+  - text: 谢谢您的反馈
+  - text: 谢谢您的支持
+  - text: 感谢您的支持
+  - text: 感谢您的回复
+  - text: 感谢您的建议
+  - text: 感谢您的反馈
+  - text: 非常感谢您的回复
+  - text: 非常感谢您的建议
+  - text: 非常感谢您的反馈
+  - text: 非常感谢您的支持
+  - text: 谢谢你的回复
+  - text: 谢谢你的建议
+  - text: 谢谢你的反馈
+  - text: 谢谢你的支持
+  - text: 感谢你的支持
+  - text: 感谢你的回复
+  - text: 感谢你的建议
+  - text: 感谢你的反馈
+  - text: 非常感谢你的回复
+  - text: 非常感谢你的建议
+  - text: 非常感谢你的反馈
+  - text: 非常感谢你的支持
+  - text: 谢谢
+  - text: 感谢
+  - text: 多谢
+  - text: 谢谢支持
+  - text: 谢谢回复
+  - text: 谢谢建议
+  - text: 谢谢反馈
+  - text: 谢谢您
+  - text: 谢谢你
+  - text: 感谢您
+  - text: 感谢你
+  - text: 太感谢您了
+  - text: 太感谢你了
+  - text: 多谢您的好意
+  - text: 多谢你的好意
+  - text: thanks
+  - text: thank you
+  - text: 谢谢夸奖
+  - text: 谢谢回答
+  - text: 十分感谢
+topics: []
