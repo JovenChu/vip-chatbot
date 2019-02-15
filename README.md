@@ -1,7 +1,8 @@
 # 任务型对话系统
-* 使用Rasa框架进行二次开发,完成任务型的对话系统搭建
+
 
 ## 1. Rasa Review
+*  **使用Rasa框架进行二次开发,完成任务型的对话系统搭建。**
 * （1）进入[rasa官网](https://rasa.com/)了解rasa的详情；
 * （2）了解rasa基础模型文件：[Rasa-nlu](https://github.com/RasaHQ/rasa_nlu) 和 [Rasa-core](https://github.com/RasaHQ/rasa_core)
 * （3）Rasa的安装：在Linux或Mac OS中安装较为方便，而Windows安装需要进行编译，较为繁杂。
