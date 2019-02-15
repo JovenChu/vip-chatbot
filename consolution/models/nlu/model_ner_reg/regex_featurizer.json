@@ -1,0 +1,90 @@
+[
+    {
+        "name": "card",
+        "pattern": "清单"
+    },
+    {
+        "name": "erroritem",
+        "pattern": "(证件|手机|电话|号码)"
+    },
+    {
+        "name": "method",
+        "pattern": "(转账|在线|网上)"
+    },
+    {
+        "name": "reg1",
+        "pattern": "(信用卡|储值卡|记账卡|联名记账卡|联名卡|单位记账卡|粤通卡)"
+    },
+    {
+        "name": "reg10",
+        "pattern": "车"
+    },
+    {
+        "name": "reg11",
+        "pattern": "新能源"
+    },
+    {
+        "name": "reg12",
+        "pattern": "进度"
+    },
+    {
+        "name": "reg13",
+        "pattern": "绑"
+    },
+    {
+        "name": "reg14",
+        "pattern": "升级"
+    },
+    {
+        "name": "reg15",
+        "pattern": "车主"
+    },
+    {
+        "name": "reg16",
+        "pattern": "(安装|装|安)"
+    },
+    {
+        "name": "reg17",
+        "pattern": "(办理|办|申请)"
+    },
+    {
+        "name": "reg18",
+        "pattern": "委托"
+    },
+    {
+        "name": "reg2",
+        "pattern": "(公众号|城市服务)"
+    },
+    {
+        "name": "reg4",
+        "pattern": "票根网"
+    },
+    {
+        "name": "reg5",
+        "pattern": "小程序"
+    },
+    {
+        "name": "reg6",
+        "pattern": "记录"
+    },
+    {
+        "name": "reg7",
+        "pattern": "标签"
+    },
+    {
+        "name": "reg8 ",
+        "pattern": "手续"
+    },
+    {
+        "name": "reg9",
+        "pattern": "银行"
+    },
+    {
+        "name": "rege3",
+        "pattern": "APP"
+    },
+    {
+        "name": "yuetongbao",
+        "pattern": "(粤通宝|粤通宝V2.0|粤通宝2.0|粤通宝2.0卡)"
+    }
+]

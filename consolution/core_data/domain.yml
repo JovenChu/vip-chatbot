@@ -1,0 +1,133 @@
+slots:
+  banka_item:
+    type: text
+  chaxun_item:
+    type: text
+
+intents:
+  - greet
+  - confirm
+  - goodbye
+  - thanks
+  - handle
+  - banka_fangshi
+  - chaxun_work
+  - use_fanwei
+  - inform_chaxun
+
+entities:
+  - banka_item
+  - chaxun_item
+
+templates:
+  utter_greet:
+    - "您好!，我是小粤粤，很高兴为您服务，您想咨询什么信息呢？"
+    - "Hi!，我是小粤粤，有什么可以帮您吗？"
+    - "Hello"
+    - "你好"
+    - "您好"
+    - "您好啊"
+    - "你好啊"
+    - "很开心遇见你啊"
+    - "很开心遇见你"
+    - "很开心遇见您啊"
+    - "很开心遇见您"
+    - "很高兴见到你"
+    - "很高兴见到您"
+    - "hello"
+    - "hi"
+    - "Hi"
+    - "您回来啦"
+    - "你回来啦"
+    - "Nice to meet you"
+  utter_goodbye:
+    - "再见，为您服务很开心^_^"
+    - "Bye，下次再见"
+    - "再见"
+    - "bye"
+    - "byebye"
+    - "下次再见"
+    - "88"
+    - "8"
+    - "886"
+    - "明天见"
+    - "下次见"
+    - "请慢走"
+    - "慢走"
+    - "您慢走"
+    - "您下次再来"
+    - "下次再来"
+    - "goodbye"
+    - "拜拜"
+    - "掰掰"
+    - "有幸再会"
+
+  utter_default:
+    - "没有明白您的意思呀，能重新描述一下吗？"
+    - "哈哈，刚刚开了个小差，没有明白呢，可以再描述一下吗？"
+  utter_thanks:
+    - "不用谢哦"
+    - "我应该做的"
+    - "您开心我就开心"
+    - "您的肯定就是对我的奖励哦"
+    - "谢谢您的回复"
+    - "谢谢您的建议"
+    - "谢谢您的反馈"
+    - "谢谢您的支持"
+    - "感谢您的支持"
+    - "感谢您的回复"
+    - "感谢您的建议"
+    - "感谢您的反馈"
+    - "非常感谢您的回复"
+    - "非常感谢您的建议"
+    - "非常感谢您的反馈"
+    - "非常感谢您的支持"
+    - "谢谢你的回复"
+    - "谢谢你的建议"
+    - "谢谢你的反馈"
+    - "谢谢你的支持"
+    - "感谢你的支持"
+    - "感谢你的回复"
+    - "感谢你的建议"
+    - "感谢你的反馈"
+    - "非常感谢你的回复"
+    - "非常感谢你的建议"
+    - "非常感谢你的反馈"
+    - "非常感谢你的支持"
+    - "谢谢"
+    - "感谢"
+    - "多谢"
+    - "谢谢支持"
+    - "谢谢回复"
+    - "谢谢建议"
+    - "谢谢反馈"
+    - "谢谢您"
+    - "谢谢你"
+    - "感谢您"
+    - "感谢你"
+    - "太感谢您了"
+    - "太感谢你了"
+    - "多谢您的好意"
+    - "多谢你的好意"
+    - "thanks"
+    - "thank you"
+    - "谢谢夸奖"
+    - "谢谢回答"
+    - "十分感谢"
+  utter_ask_more_help:
+    - "请问还有什么能帮您吗？"
+    - "请问您还想查询什么信息呢？"
+  utter_ask_chaxun:
+    - "请问你是想查询什么呢？(订单/余额/明细)"
+
+actions:
+  - utter_greet
+  - utter_goodbye
+  - utter_default
+  - utter_thanks
+  - utter_ask_more_help
+  - utter_ask_chaxun
+  - vip_action.ActionDefaultFallback
+  - vip_action.Bankafangshi
+  - vip_action.Chaxunwork
+  - vip_action.Usefanwei

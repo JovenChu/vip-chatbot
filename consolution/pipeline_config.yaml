@@ -1,0 +1,13 @@
+language: "zh"
+
+pipeline:
+- name: "nlp_mitie"
+  model: "nlu_data/total_word_feature_extractor.dat"
+- name: "tokenizer_jieba"
+  dictionary_path: "nlu_data/jieba_dictionary.txt"
+- name: "ner_mitie"
+- name: "myregex_entity_extractor.MyRegeexEntityExtractor"
+- name: "ner_synonyms"
+- name: "intent_entity_featurizer_regex"
+- name: "intent_featurizer_mitie"
+- name: "intent_classifier_sklearn"

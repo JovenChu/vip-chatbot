@@ -1,0 +1,100 @@
+{
+  "action_fingerprints": {
+    "action_listen": {
+      "slots": [
+        "error_item",
+        "card",
+        "method",
+        "bang_item"
+      ]
+    },
+    "Banliweituo": {
+      "slots": []
+    },
+    "Banliwhichbank": {
+      "slots": []
+    },
+    "Bangdingbiaoqianzuai": {
+      "slots": []
+    },
+    "Banlishouxu": {
+      "slots": []
+    },
+    "Bangdingyue": {
+      "slots": []
+    },
+    "Banliwhere": {
+      "slots": []
+    },
+    "Bangdingbiaoqiantruck": {
+      "slots": []
+    },
+    "Bangdingweixinduozhang": {
+      "slots": []
+    },
+    "Banlihow": {
+      "slots": []
+    },
+    "Banlixinnengyuanxiaochengxu": {
+      "slots": []
+    },
+    "Bangdingyuechange": {
+      "slots": []
+    },
+    "Bangdingupgradeerror": {
+      "slots": []
+    },
+    "Banlihuochewhere": {
+      "slots": []
+    },
+    "Bangdingbiaoqianinstall": {
+      "slots": []
+    },
+    "Banliyuemethod": {
+      "slots": []
+    },
+    "Banliqianyi": {
+      "slots": []
+    },
+    "utter_greet": {
+      "slots": []
+    },
+    "Bangdingyuebao": {
+      "slots": []
+    },
+    "Bangdingyuebaoflow": {
+      "slots": []
+    },
+    "utter_goodbye": {
+      "slots": []
+    },
+    "Bangdingupgradecardnum": {
+      "slots": []
+    },
+    "Banlidaiban": {
+      "slots": []
+    },
+    "Banlibankif": {
+      "slots": []
+    },
+    "Banliwaidiif": {
+      "slots": []
+    },
+    "Bangdingchepai": {
+      "slots": []
+    },
+    "Bangdingbiaoqianwhere": {
+      "slots": []
+    }
+  },
+  "rasa_core": "0.9.8",
+  "max_histories": [
+    3,
+    null
+  ],
+  "ensemble_name": "rasa_core.policies.ensemble.SimplePolicyEnsemble",
+  "policy_names": [
+    "rasa_core.policies.keras_policy.KerasPolicy",
+    "rasa_core.policies.fallback.FallbackPolicy"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "action_fingerprints": {
+    "action_listen": {
+      "slots": []
+    },
+    "Bangdingweixinduozhang": {
+      "slots": []
+    },
+    "Bangdingbiaoqianwhere": {
+      "slots": []
+    },
+    "Bangdingyuechange": {
+      "slots": []
+    },
+    "Bangdingbiaoqiantruck": {
+      "slots": []
+    },
+    "Bangdingyuebao": {
+      "slots": []
+    },
+    "Banlibankif": {
+      "slots": []
+    },
+    "Banliwhere": {
+      "slots": []
+    },
+    "Bangdingyuebaoflow": {
+      "slots": []
+    },
+    "Banlishouxu": {
+      "slots": []
+    },
+    "Banliyuemethod": {
+      "slots": []
+    },
+    "Banlihuochezhuanban": {
+      "slots": []
+    },
+    "Banliqianyi": {
+      "slots": []
+    },
+    "Bangdingchepai": {
+      "slots": []
+    },
+    "utter_goodbye": {
+      "slots": []
+    },
+    "utter_greet": {
+      "slots": []
+    },
+    "Banlihow": {
+      "slots": []
+    },
+    "Banlidaiban": {
+      "slots": []
+    },
+    "Banlijindu": {
+      "slots": []
+    },
+    "Bangdingbiaoqianchange": {
+      "slots": []
+    },
+    "Banlihuochewhere": {
+      "slots": []
+    },
+    "Bangdingbiaoqianzuai": {
+      "slots": []
+    },
+    "Banlixinnengyuanxiaochengxu": {
+      "slots": []
+    },
+    "Banliwhichbank": {
+      "slots": []
+    },
+    "Bangdingupgradeerror": {
+      "slots": []
+    },
+    "Bangdingyue": {
+      "slots": []
+    },
+    "Bangdingbiaoqianinstall": {
+      "slots": []
+    }
+  },
+  "rasa_core": "0.9.8",
+  "max_histories": [
+    3,
+    3
+  ],
+  "ensemble_name": "rasa_core.policies.ensemble.SimplePolicyEnsemble",
+  "policy_names": [
+    "rasa_core.policies.memoization.MemoizationPolicy",
+    "rasa_core.policies.keras_policy.KerasPolicy"
+  ]
+}
