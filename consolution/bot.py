@@ -46,11 +46,6 @@ class MyInputChannel(InputChannel):
 
     def compute(self, input, request_id,  max_message_limit=None):
         if max_message_limit is None or num_messages < max_message_limit:
-            # text = input().strip()
-            # text = '那些银行可以办理储值卡'
-            # if six.PY2:
-            #     # in python 2 input doesn't return unicode values
-            #     text = text.decode("utf-8")
             if input == self.INTENT_MESSAGE_PREFIX + 'stop':
                 return
             self.handler(UserMessage(input, self.outPutChannel, request_id))
@@ -78,7 +73,7 @@ def train_nlu():
 
 
 def train_dialogue(domain_file="core_data/domain.yml",
-                   model_path="models/dialogue",
+                   model_path="models/dialogue/core",
                    training_data_file="core_data/story.md",
                    max_history=3):
     from rasa_core.policies.fallback import FallbackPolicy
@@ -118,7 +113,7 @@ def train_dialogue(domain_file="core_data/domain.yml",
 
 
 def run(serve_forever=True):
-    agent = Agent.load("models/dialogue", interpreter=RasaNLUInterpreter("models/nlu/model_ner_reg"))
+    agent = Agent.load("models/dialogue/core", interpreter=RasaNLUInterpreter("models/nlu/model_ner_reg"))
 
     inputChannel = MyInputChannel()
     if serve_forever:
@@ -131,7 +126,7 @@ def run(serve_forever=True):
 
 class YueBot():
     def __init__(self):
-        self.agent = Agent.load("models/dialogue", interpreter=RasaNLUInterpreter("models/nlu/model_ner_reg"))
+        self.agent = Agent.load("models/dialogue/core", interpreter=RasaNLUInterpreter("models/nlu/model_ner_reg"))
         self.inputChannel = MyInputChannel()
         self.agent.handle_channel(self.inputChannel)
 
@@ -173,7 +168,3 @@ if __name__ == "__main__":
         warnings.warn("Need to pass either 'train-nlu', 'train-dialogue' or "
                       "'run' to use the script.")
         exit(1)
-
-
-    # bot = YueBot()
-    # print(bot.bot('那些银行可以办理储值卡'))
