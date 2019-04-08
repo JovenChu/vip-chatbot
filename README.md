@@ -190,3 +190,275 @@
     ```
     $ python webchat.py
     ```
+
+## 4.意图分类训练过程详解
+
+- 4.1 训练总控及数据处理：`rasa_nlu/model.py`
+
+```python
+    def train(self, data, **kwargs):
+        # type: (TrainingData) -> Interpreter
+        """Trains the underlying pipeline using the provided training data."""
+        # 获取训练数据
+        self.training_data = data
+        # kwargs就是当你传入key=value时存储的字典
+        context = kwargs  # type: Dict[Text, Any]
+        #遍历检查组件是否缺失
+        for component in self.pipeline:
+            updates = component.provide_context()
+            if updates:
+                context.update(updates)
+
+        # Before the training starts: check that all arguments are provided
+        if not self.skip_validation:
+            components.validate_arguments(self.pipeline, context)
+
+        # data gets modified internally during the training - hence the copy
+        working_data = copy.deepcopy(data)
+        # 开始每个组件的训练
+        for i, component in enumerate(self.pipeline):
+            logger.info("Starting to train component {}"
+                        "".format(component.name))
+            component.prepare_partial_processing(self.pipeline[:i], context)
+            updates = component.train(working_data, self.config,
+                                      **context)
+            logger.info("Finished training component.")
+            if updates:
+                context.update(updates)
+
+        return Interpreter(self.pipeline, context)
+
+    # 加载mitie用于训练所有词向量的特征，还有维基百科中文的词向量文件：nlu_data/total_word_feature_extractor.dat
+    def provide_context(self):
+        type: () -> Dict[Text, Any]
+        return {"mitie_feature_extractor": self.extractor,
+                "mitie_file": self.component_config.get("model")
+```
+
+- 4.2 自定义训练的流程组件
+
+```yaml
+language: "zh"
+
+pipeline:
+- name: "nlp_mitie" # 初始化MITIE
+  model: "nlu_data/yue_total_word_feature_extractor.dat"
+- name: "tokenizer_jieba"
+  dictionary_path: "nlu_data/jieba_dictionary.txt"
+- name: "ner_mitie"
+- name: "myregex_entity_extractor.MyRegeexEntityExtractor"
+- name: "ner_synonyms"
+- name: "intent_entity_featurizer_regex"
+- name: "intent_featurizer_mitie"
+- name: "intent_classifier_sklearn"
+
+```
+
+- 4.3 ner命名实体识别训练组件，得到最优的惩罚系数C：`rasa_nlu/extractors/mitie_entity_extractor.py`
+
+```python
+  def train(self, training_data, config, **kwargs):
+        # type: (TrainingData, RasaNLUModelConfig) -> None
+        import mitie
+        # 加载预训练好的维基百科词向量文件
+        model_file = kwargs.get("mitie_file")
+        if not model_file:
+            raise Exception("Can not run MITIE entity extractor without a "
+                            "language model. Make sure this component is "
+                            "preceeded by the 'nlp_mitie' component.")
+        # 初始化词向量的训练器
+        trainer = mitie.ner_trainer(model_file)
+        # 线程数为1
+        trainer.num_threads = kwargs.get("num_threads", 1)
+        found_one_entity = False
+
+        # filter out pre-trained entity examples
+        # 遍历加载训练数据中实体实例
+        filtered_entity_examples = self.filter_trainable_entities(
+                training_data.training_examples)
+
+        for example in filtered_entity_examples:
+            sample = self._prepare_mitie_sample(example)
+
+            found_one_entity = sample.num_entities > 0 or found_one_entity
+            trainer.add(sample)
+
+        # Mitie will fail to train if there is not a single entity tagged
+        if found_one_entity:
+            self.ner = trainer.train()
+
+    # 准备实体训练所需要的数据，并返回分词在文本中的位置信息
+    def filter_trainable_entities(self, entity_examples):
+        # type: (List[Message]) -> List[Message]
+        """Filters out untrainable entity annotations.
+
+        Creates a copy of entity_examples in which entities that have
+        `extractor` set to something other than self.name (e.g. 'ner_crf')
+        are removed."""
+        # 储存所有的训练数据的实体内容信息（实体，意图）及其位置信息（始止）
+        filtered = []
+        # 遍历json文件中的每个训练数据
+        for message in entity_examples:
+            entities = []
+            # 获取每条训练数据中的所有实体信息
+            for ent in message.get("entities", []):
+                extractor = ent.get("extractor")
+                if not extractor or extractor == self.name:
+                    entities.append(ent)
+            # 更新实体信息
+            data = message.data.copy()
+            data['entities'] = entities
+            # 如语料‘我要上海明天的天气’中的实体（地点，日期）信息：{'intent': 'weather_address_date-time', 'entities': [{'start': 2, 'end': 4, 'value': '上海', 'entity': 'address'}, {'start': 4, 'end': 6, 'value': '明天', 'entity': 'date-time'}]
+            filtered.append(
+                Message(text=message.text,
+                        data=data,
+                        output_properties=message.output_properties,
+                        time=message.time))
+
+        return filtered
+
+    def _prepare_mitie_sample(self, training_example):
+        import mitie
+        # 获取训练数据：‘我要上海明天的天气’
+        text = training_example.text
+        # 分词后的list：['我要','上海','明天','的','天气']
+        tokens = training_example.get("tokens")
+        sample = mitie.ner_training_instance([t.text for t in tokens])
+        # 遍历语料中的实体，地点和时间：{'start': 2, 'end': 4, 'value': '上海', 'entity': 'address'}, {'start': 4, 'end': 6, 'value': '明天', 'entity': 'date-time'}]
+        for ent in training_example.get("entities", []):
+            try:
+                # if the token is not aligned an exception will be raised
+                start, end = MitieEntityExtractor.find_entity(
+                        ent, text, tokens)
+            except ValueError as e:
+                logger.warning("Example skipped: {}".format(str(e)))
+                continue
+            try:
+                # mitie will raise an exception on malicious
+                # input - e.g. on overlapping entities
+                sample.add_entity(list(range(start, end)), ent["entity"])
+            except Exception as e:
+                logger.warning("Failed to add entity example "
+                               "'{}' of sentence '{}'. Reason: "
+                               "{}".format(str(e), str(text), e))
+                continue
+        return sample
+
+    def train(self):
+        if self.size == 0:
+            raise Exception("You can't call train() on an empty trainer.")
+        # Make the type be a c_void_p so the named_entity_extractor constructor will know what to do.
+        # 获取最优C参数的训练
+        obj = ctypes.c_void_p(_f.mitie_train_named_entity_extractor(self.__obj))
+        if obj is None:
+            raise Exception("Unable to create named_entity_extractor.  Probably ran out of RAM")
+        return named_entity_extractor(obj)
+
+```
+
+- 4.4 同义词替换训练组件：`rasa_nlu/extractors/entity_synonyms.py`
+
+```python
+    def train(self, training_data, config, **kwargs):
+        # type: (TrainingData) -> None
+        # 获取json数据中的同义词信息，加入到self的synonyms参数当中来
+        for key, value in list(training_data.entity_synonyms.items()):
+            self.add_entities_if_synonyms(key, value)
+        # 将实体词加入到self的entity参数当中来
+        for example in training_data.entity_examples:
+            for entity in example.get("entities", []):
+                entity_val = example.text[entity["start"]:entity["end"]]
+                self.add_entities_if_synonyms(entity_val,
+                                              str(entity.get("value")))
+```
+
+- 4.5 自定义正则特征加强组件：`rasa_nlu/featurizers/regex_featurizer.py`
+
+```python
+    def train(self, training_data, config, **kwargs):
+        # type: (TrainingData, RasaNLUModelConfig, **Any) -> None
+
+        # 加载自定义的正则特征：regex.json
+        for example in training_data.regex_features:
+            self.known_patterns.append(example)
+
+        for example in training_data.training_examples:
+            updated = self._text_features_with_regex(example)
+            example.set("text_features", updated)
+```
+
+- 4.6 实体特征向量化组件：`rasa_nlu/featurizers/mitie_featurizer.py`
+
+```python
+    def train(self, training_data, config, **kwargs):
+        # type: (TrainingData, RasaNLUModelConfig, **Any) -> None
+
+        mitie_feature_extractor = self._mitie_feature_extractor(**kwargs)
+        for example in training_data.intent_examples:
+            # 构建向量化特征
+            features = self.features_for_tokens(example.get("tokens"),
+                                                mitie_feature_extractor)
+            example.set("text_features",
+                        self._combine_with_existing_text_features(
+                                example, features))
+
+```
+
+- 4.7 意图识别分类器训练组件：在`rasa_nlu/classifiers/sklearn_intent_classifier.py`
+
+```python
+    def train(self, training_data, cfg, **kwargs):
+        # type: (TrainingData, RasaNLUModelConfig, **Any) -> None
+        """Train the intent classifier on a data set."""
+        # 定义线程数，可否增加，会对训练有什么影响？
+        num_threads = kwargs.get("num_threads", 1)
+        # 获取训练数据中的意图标签
+        labels = [e.get("intent")
+                  for e in training_data.intent_examples]
+        # 意图标签需要至少两类，否则发出警告
+        if len(set(labels)) < 2:
+            logger.warn("Can not train an intent classifier. "
+                        "Need at least 2 different classes. "
+                        "Skipping training of intent classifier.")
+        else:
+            # 将字符串标签用num来表示
+            y = self.transform_labels_str2num(labels)
+
+            # 获取one-hot编码的训练数据
+            X = np.stack([example.get("text_features")
+                          for example in training_data.intent_examples])
+            # 创建训练器
+            self.clf = self._create_classifier(num_threads, y)
+            # 开始训练
+            self.clf.fit(X, y)
+
+    def _create_classifier(self, num_threads, y):
+        from sklearn.model_selection import GridSearchCV
+        from sklearn.svm import SVC
+        # 获取参数调节列表，暂定为[1,2,5,10,20,100]
+        C = self.component_config["C"]
+        # 使用的是线性核：linear
+        kernels = self.component_config["kernels"]
+        # dirty str fix because sklearn is expecting
+        # str not instance of basestr...
+        tuned_parameters = [{"C": C,
+                             "kernel": [str(k) for k in kernels]}]
+
+        # aim for 5 examples in each fold
+        # 每个fold应该要有5个样例
+        cv_splits = self._num_cv_splits(y)
+        # 返回网格搜索的训练器
+        return GridSearchCV(SVC(C=1,
+                                probability=True,
+                                class_weight='balanced'),
+                            param_grid=tuned_parameters,
+                            n_jobs=num_threads,
+                            cv=cv_splits,
+                            scoring='f1_weighted',
+                            verbose=1)
+
+    def _num_cv_splits(self, y):
+        folds = self.component_config["max_cross_validation_folds"]
+        return max(2, min(folds, np.min(np.bincount(y)) // 5))
+
+```
