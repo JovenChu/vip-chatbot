@@ -1,8 +1,9 @@
 # pip install -U -r requirements.txt -i https://pypi.douban.com/simple
 rasa_core==0.9.8
 rasa_addons==0.4.3
+keras==2.1.6
+tensorflow=1.8.0
 scikit-learn
 sklearn-crfsuite
 git+https://github.com/mit-nlp/MITIE.git
 jieba
-
